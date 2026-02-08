@@ -1,8 +1,3 @@
-if (nw.App.argv.length < 2) {
-    process.stdout.write('Call with node client.js [address] [name]\n');
-    process.exit();
-}
-
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -89,9 +84,9 @@ renderer.setAnimationLoop(animate);
 const net = require('net');
 const readline = require('readline');
 
-const socket = net.connect(12345, nw.App.argv[0]);
+const socket = net.connect(prompt('Enter port number:'), prompt('Enter server address:'));
 socket.on('connect', function() {
-    socket.write(JSON.stringify({method: 'join', name: nw.App.argv[1]}) + '\n');
+    socket.write(JSON.stringify({method: 'join', name: prompt('Enter player name:')}) + '\n');
 });
 socket.on('error', function() {});
 
