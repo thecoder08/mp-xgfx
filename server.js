@@ -88,6 +88,7 @@ function tick() {
             players[id].position.x -= speed * Math.cos(players[id].rotation.y);
             players[id].position.z += speed * Math.sin(players[id].rotation.y);
         }
+        players[id].position.addVector(players[id].velocity);
         sockets[id].write(JSON.stringify({event: 'update', players: players}) + '\n'); // UNCOMMENT THIS!
     }
 }
@@ -102,12 +103,18 @@ function Vector3(x, y, z) {
     this.x = x;
     this.y = y;
     this.z = z;
+    this.addVector = function(v) {
+        this.x += v.x;
+        this.y += v.y;
+        this.z += v.z;
+    }
 }
 
 function Player(name) {
     this.name = name;
     this.position = new Vector3(0, 0, 0);
     this.rotation = new Vector3(0, 0, 0);
+    this.velocity = new Vector3(0, 0, 0);
     this.controls = {fwd: false, back: false, up: false, down: false, left: false, right: false};
 }
 
