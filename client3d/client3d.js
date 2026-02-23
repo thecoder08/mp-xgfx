@@ -109,6 +109,7 @@ renderer.setAnimationLoop(animate);
 
 const net = require('net');
 const readline = require('readline');
+const messages = document.querySelector('pre');
 
 const socket = net.connect(/*prompt('Enter port number:')*/12345, /*prompt('Enter server address:')*/'localhost');
 socket.on('connect', function() {
@@ -127,6 +128,8 @@ rl.on('line', function(line) {
         break;
         case 'message':
             console.log(event.content);
+            messages.innerText += event.content + '\n';
+            messages.scrollTop = messages.scrollHeight;
         break;
         case 'informid':
             myid = event.id;
@@ -200,12 +203,6 @@ document.onkeyup = function(event) {
 function updateControls() {
     socket.write(JSON.stringify({method: 'setControls', fwd: controls.fwd, back: controls.back, up: controls.up, down: controls.down, left: controls.left, right: controls.right}) + '\n');
 }
-
-const chat = readline.createInterface({input: process.stdin, crlfDelay: Infinity});
-chat.on('line', function(line) {
-    console.log(line);
-    socket.write(JSON.stringify({method: 'message', message: line}) + '\n');
-});
 
 window.onresize = function() {
     renderer.setSize(window.innerWidth, window.innerHeight);
